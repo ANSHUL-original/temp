@@ -8,6 +8,7 @@
 </head>
 <body>
 	<%@ include file="header.jsp" %>
+	<p>EEEEEEEEEEEEEEEEEEEE</p>
 	<form action="/updateUser" method="post">
 		<input type="hidden" name="uid" value="${user.uid }">
 		<label>User Name: </label>

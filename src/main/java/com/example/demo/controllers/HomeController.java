@@ -3,19 +3,16 @@ package com.example.demo.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.dao.UserDao;
-import com.example.demo.model.Test;
 import com.example.demo.model.User;
 
 @Controller
@@ -23,21 +20,13 @@ public class HomeController {
 
 	@Autowired
 	UserDao userDao;
-		
-	@RequestMapping("/")
-	public String home() {
-		return "home";
-	}
-	@RequestMapping("/adduserpage")
-	public String adduserPage() {
-		return "adduserpage";
-	}
-	
-	@RequestMapping("/adduser")
-	public String addUserMethod(User user) {
+			
+	@PostMapping("/adduser")
+	public String addUserMethod(@RequestBody User userData) {
 		System.out.println("addUser method");
-		userDao.addUserDao(user);
+		userDao.addUserDao(userData);
 		return "home";
+		
 	}
 	@RequestMapping("/showAll")
 	public ModelAndView showAllMethod() {
@@ -58,10 +47,9 @@ public class HomeController {
 	}
 	
 	
-	@GetMapping("/updateuser/{uid}")
+	@PostMapping("/updateuser/{uid}")
 	public ModelAndView updateUserShowMethod(@PathVariable("uid") int uid) {
 		System.err.println("update by id");
-		
 		ModelAndView mv=new ModelAndView();
 		User user=userDao.getUserById(uid);
 		mv.addObject("user", user);
@@ -111,33 +99,18 @@ public class HomeController {
 		return mv;
 	}
 	
-//	@PostMapping("/filterTechnology")
-//	public ModelAndView filterTech(String uTech,String uName ) {
-//		ModelAndView mv=new ModelAndView();
-//		List<User> list=userDao.applyFilterTechDao(uTech,uName);
-//		List<Object> namelist=userDao.getNameList();
-//		mv.addObject("list" ,list);
-//		mv.addObject("namelist",namelist);
-//		mv.setViewName("alluserdata");
-//		return mv;
-//	}
-	
-	
-	
+
 	@PostMapping("/filterTechnology/{uTech}")
+	@ResponseBody
 	public ModelAndView getRquestMapping(@PathVariable String uTech){
+		System.out.println("inside controller");
 		ModelAndView mv=new ModelAndView();
 		List<User> list=userDao.applyFilterTechDao(uTech);
-		System.out.println(list+"444");
-		System.out.println("uTEch "+uTech);
-		
-		
+		List<Object> namelist=userDao.getNameList();
+		mv.addObject("namelist",namelist);
 		mv.addObject("list",list);
 		mv.setViewName("alluserdata");
-		
-		
 		return mv;
 	}
 
-	
 }
