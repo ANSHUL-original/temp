@@ -34,7 +34,7 @@
 		<tr>
 			<c:forEach var="user" items="${list}">
 				<tr>
-					<td id="userId">${user.uid}</td>
+					<td>${user.uid}</td>
 					<td>${user.uName}</td>
 					<td>${user.uTech}</td>
 					<td><button id="updateId" type="button" onclick="up(${user.uid})">Update</button></td>
@@ -48,7 +48,70 @@
 	<a href="/">Home</a>
 	
 </div>
-	<script type="text/javascript" src="/js/main.js"></script>
+	<script type="text/javascript">
+
+
+	up = function(value){
+		    	var search=value;
+			    $.ajax({
+			        type: "POST",
+			        contentType: "application/json",
+			        url: "updateuser/"+search,
+			        data: JSON.stringify(search),
+			        success: function (data) {
+						alert(data);
+						$("#showTable").html(data);
+			            console.log("SUCCESS : ", data);
+			        }
+			    });
+	}
+
+	del = function(value){
+		var search=value;
+	    $.ajax({
+	        type: "POST",
+	        contentType: "application/json",
+	        url: "deleteuser/"+search,
+	        data: JSON.stringify(search),
+	        success: function (data) {
+				alert(data);
+				$("#showTable").html(data);
+	            console.log("SUCCESS : ", data);
+	        }
+	    });
+	}
+
+	filter = function(){
+		var search = $("#uTech").val();
+	    $("#submitButton").prop("disabled", true);
+	
+	    $.ajax({
+	    	alert("hello");
+	        type: "POST",
+	        contentType: "application/json",
+	        url: "filterFun/"+search,
+	        data: JSON.stringify(search),
+	        success: function (data) {
+	
+	        	$("#showTable").html(data);
+	
+	            console.log("SUCCESS : ", json);
+	            $("#submitButton").prop("disabled", false);
+	
+	        },
+	        error: function (e) {
+	            var json = "<h4>Ajax Response</h4><pre>"
+	                + e.responseText + "</pre>";
+	            $("#showTable").html(json);
+	
+	            console.log("ERROR : ", e);
+	            $("#submitButton").prop("disabled", false);
+	
+	        }
+	        
+	    });
+	}
+	</script>
 
 	
 </body>
